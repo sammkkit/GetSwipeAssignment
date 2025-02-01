@@ -19,7 +19,7 @@ class ProductListViewModel (
         getProducts()
     }
 
-    private fun getProducts() {
+    fun getProducts() {
         getProductUseCase().onEach { result->
             when(result){
                 is Resource.Success -> {

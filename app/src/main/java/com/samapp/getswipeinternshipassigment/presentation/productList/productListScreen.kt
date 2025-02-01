@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,56 +24,62 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.samapp.getswipeinternshipassigment.presentation.productAddition.productAdditionViewModel
 import com.samapp.getswipeinternshipassigment.presentation.productList.components.ProductItemComponent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ProductListScreen() {
-    val viewModel: ProductListViewModel = koinViewModel()
+fun ProductListScreen(
+    viewModel: ProductListViewModel = koinViewModel(),
+    searchQuery: String = ""
+) {
     val state by viewModel.state
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isLoading)
 
-    LaunchedEffect(state) {
-        Log.d("TestScreen", "State updated: $state")
+    val filteredProducts = remember(searchQuery, state.products) {
+        state.products.filter { product ->
+            product.product_name.contains(searchQuery, ignoreCase = true)
+        }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF4F4F4))
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    SwipeRefresh(
+        state = swipeRefreshState,
+        onRefresh = { viewModel.getProducts() }
     ) {
-        when {
-            state.isLoading -> {
-                CircularProgressIndicator()
-            }
-            state.error != null -> {
-                Text(
-                    text = "Error: ${state.error}",
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF4F4F4))
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            when {
+                state.isLoading -> CircularProgressIndicator()
+                state.error != null -> Text(
+                    "Error: ${state.error}",
                     color = Color.Red,
                     fontWeight = FontWeight.Bold
                 )
-            }
-            state.products.isEmpty() -> {
-                Text(
-                    text = "No products available",
+
+                filteredProducts.isEmpty() -> Text(
+                    "No products available",
                     color = Color.Gray,
                     fontSize = 18.sp
                 )
-            }
-            else -> {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(state.products) { product ->
-                        ProductItemComponent(
-                            productItem = product
-                        )
+
+                else -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(filteredProducts) { product ->
+                            ProductItemComponent(productItem = product)
+                        }
                     }
                 }
             }

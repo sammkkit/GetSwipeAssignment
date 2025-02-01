@@ -1,16 +1,38 @@
 package com.samapp.getswipeinternshipassigment.data.repositroy
 
-import com.samapp.getswipeinternshipassigment.data.api.productApiService
-import com.samapp.getswipeinternshipassigment.data.dto.productAddedResponse
-import com.samapp.getswipeinternshipassigment.data.dto.productDtoItem
+import com.samapp.getswipeinternshipassigment.data.local.dao.ProductDao
+import com.samapp.getswipeinternshipassigment.data.local.model.toProductDto
+import com.samapp.getswipeinternshipassigment.data.remote.api.productApiService
+import com.samapp.getswipeinternshipassigment.data.remote.dto.productAddedResponse
+import com.samapp.getswipeinternshipassigment.data.remote.dto.productDtoItem
+import com.samapp.getswipeinternshipassigment.data.remote.dto.toProductEntity
+import com.samapp.getswipeinternshipassigment.data.remote.dto.toProductItem
 import com.samapp.getswipeinternshipassigment.domain.model.productItem
 import com.samapp.getswipeinternshipassigment.domain.repository.AppRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class AppRepositoryImpl(
-    private val apiService: productApiService
+    private val apiService: productApiService,
+    private val productDao: ProductDao
 ) : AppRepository {
     override suspend fun getProducts(): List<productDtoItem> {
-        return apiService.getProducts()
+        return try {
+            val productsFromApi = apiService.getProducts()
+
+            // Store the fetched data in Room for future use
+            withContext(Dispatchers.IO) {
+                productDao.insertProducts(productsFromApi.map { it.toProductEntity()})
+            }
+
+            productsFromApi
+        } catch (exception: Exception) {
+            val products =
+                withContext(Dispatchers.IO) {
+                    productDao.getAllProducts()
+                }
+            products.map { it.toProductDto() }
+        }
     }
 
     override suspend fun addProduct(

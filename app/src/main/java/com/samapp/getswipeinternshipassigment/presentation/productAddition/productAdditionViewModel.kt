@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.samapp.getswipeinternshipassigment.common.Resource
 import com.samapp.getswipeinternshipassigment.domain.model.productItem
 import com.samapp.getswipeinternshipassigment.domain.use_case.AddProductUseCase
+import com.samapp.getswipeinternshipassigment.presentation.productList.ProductListViewModel
 import kotlinx.coroutines.launch
 
 class productAdditionViewModel (
@@ -16,15 +17,15 @@ class productAdditionViewModel (
     private val _state = mutableStateOf(ProductAdditionState())
     val state: State<ProductAdditionState> = _state
     init {
-        Log.d("ProductAdditionVM", "VM initiated")
-        val testProduct = productItem(
-            product_name = "Test Product",
-            product_type = "Electronics",
-            price = "500",
-            tax = "18",
-            files = "hey.com"
-        )
-        addProduct(testProduct)
+//        Log.d("ProductAdditionVM", "VM initiated")
+//        val testProduct = productItem(
+//            product_name = "Test Product",
+//            product_type = "Electronics",
+//            price = "500",
+//            tax = "18",
+//            files = "hey.com"
+//        )
+//        addProduct(testProduct)
     }
     fun addProduct(productItem: productItem) {
         Log.d("ProductAdditionVM", "Adding product: $productItem")

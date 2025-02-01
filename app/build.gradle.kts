@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 android {
@@ -40,6 +41,15 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.google.accompanist.swiperefresh)
+    //Room
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+
+
     //coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)

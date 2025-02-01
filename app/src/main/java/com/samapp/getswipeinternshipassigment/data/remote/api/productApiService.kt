@@ -1,7 +1,7 @@
-package com.samapp.getswipeinternshipassigment.data.api
+package com.samapp.getswipeinternshipassigment.data.remote.api
 
-import com.samapp.getswipeinternshipassigment.data.dto.productAddedResponse
-import com.samapp.getswipeinternshipassigment.data.dto.productDtoItem
+import com.samapp.getswipeinternshipassigment.data.remote.dto.productAddedResponse
+import com.samapp.getswipeinternshipassigment.data.remote.dto.productDtoItem
 import com.samapp.getswipeinternshipassigment.domain.model.productItem
 import retrofit2.Response
 import retrofit2.http.Body

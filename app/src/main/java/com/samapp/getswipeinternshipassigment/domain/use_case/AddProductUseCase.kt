@@ -2,7 +2,7 @@ package com.samapp.getswipeinternshipassigment.domain.use_case
 
 import android.util.Log
 import com.samapp.getswipeinternshipassigment.common.Resource
-import com.samapp.getswipeinternshipassigment.data.dto.productAddedResponse
+import com.samapp.getswipeinternshipassigment.data.remote.dto.productAddedResponse
 import com.samapp.getswipeinternshipassigment.domain.model.productItem
 import com.samapp.getswipeinternshipassigment.domain.repository.AppRepository
 import kotlinx.coroutines.flow.Flow

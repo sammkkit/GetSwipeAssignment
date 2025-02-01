@@ -1,7 +1,10 @@
 package com.samapp.getswipeinternshipassigment.di
 
+import android.app.Application
+import androidx.room.Room
 import com.samapp.getswipeinternshipassigment.common.Constants
-import com.samapp.getswipeinternshipassigment.data.api.productApiService
+import com.samapp.getswipeinternshipassigment.data.local.database.AppDatabase
+import com.samapp.getswipeinternshipassigment.data.remote.api.productApiService
 import com.samapp.getswipeinternshipassigment.data.repositroy.AppRepositoryImpl
 import com.samapp.getswipeinternshipassigment.domain.repository.AppRepository
 import com.samapp.getswipeinternshipassigment.domain.use_case.AddProductUseCase
@@ -29,10 +32,25 @@ val AppModule : Module = module {
         get<Retrofit>().create(productApiService::class.java)
     }
 
+    // Room Database setup
+    single {
+        Room.databaseBuilder(
+            get<Application>().applicationContext,
+            AppDatabase::class.java,
+            "app_database"
+        ).build()
+    }
+
+    // DAO
+    single {
+        get<AppDatabase>().productDao()
+    }
+
     //Repository
     single<AppRepository> {
-        AppRepositoryImpl(get())
+        AppRepositoryImpl(get(),get())
     }
+
 
     //Use Cases
     single {

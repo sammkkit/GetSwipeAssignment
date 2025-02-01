@@ -1,7 +1,7 @@
 package com.samapp.getswipeinternshipassigment.domain.repository
 
-import com.samapp.getswipeinternshipassigment.data.dto.productAddedResponse
-import com.samapp.getswipeinternshipassigment.data.dto.productDtoItem
+import com.samapp.getswipeinternshipassigment.data.remote.dto.productAddedResponse
+import com.samapp.getswipeinternshipassigment.data.remote.dto.productDtoItem
 import com.samapp.getswipeinternshipassigment.domain.model.productItem
 
 interface AppRepository{

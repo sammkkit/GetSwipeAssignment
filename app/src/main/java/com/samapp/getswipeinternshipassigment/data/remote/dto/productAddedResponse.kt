@@ -1,4 +1,4 @@
-package com.samapp.getswipeinternshipassigment.data.dto
+package com.samapp.getswipeinternshipassigment.data.remote.dto
 
 import com.samapp.getswipeinternshipassigment.domain.model.productItem
 
